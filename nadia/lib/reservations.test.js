@@ -2,7 +2,7 @@ const reservations = require("./reservations");
 const Reservation = require("./schema/reservation");
 
 describe("validate", () => {
-  it("should resolve with no optional fields", () => {
+  it("should resolve with no optional fields", async () => {
     const reservation = new Reservation({
       date: "2017/06/10",
       time: "06:02 AM",
@@ -11,12 +11,12 @@ describe("validate", () => {
       email: "username@example.com",
     });
 
-    return reservations
-      .validate(reservation)
-      .then((value) => expect(value).toEqual(reservation));
+    await expect(reservations.validate(reservation)).resolves.toEqual(
+      reservation
+    );
   });
 
-  it("should reject with an invalid email", () => {
+  it("should reject with an invalid email", async () => {
     const reservation = new Reservation({
       date: "2017/06/10",
       time: "06:02 AM",
@@ -25,10 +25,8 @@ describe("validate", () => {
       email: "username",
     });
 
-    expect.assertions(1);
-
-    return reservations
-      .validate(reservation)
-      .catch((error) => expect(error).toBeInstanceOf(Error));
+    await expect(reservations.validate(reservation)).rejects.toBeInstanceOf(
+      Error
+    );
   });
 });
