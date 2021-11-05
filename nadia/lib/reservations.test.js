@@ -1,7 +1,28 @@
-const reservations = require("./reservations");
 const Reservation = require("./schema/reservation");
 
+describe("fetch", () => {
+  let reservations;
+  beforeAll(() => {
+    jest.mock("./reservations");
+    reservations = require("./reservations");
+  });
+
+  afterAll(() => {
+    jest.unmock("./reservations");
+  });
+
+  it("should be mocked and not create a databese record", () => {
+    expect(reservations.fetch()).toBeUndefined();
+  });
+});
+
 describe("validate", () => {
+  let reservations;
+
+  beforeAll(() => {
+    reservations = require("./reservations");
+  });
+
   it("should resolve with no optional fields", async () => {
     const reservation = new Reservation({
       date: "2017/06/10",
@@ -32,6 +53,12 @@ describe("validate", () => {
 });
 
 describe("create", () => {
+  let reservations;
+
+  beforeAll(() => {
+    reservations = require("./reservations");
+  });
+
   it("should reject if validation fails", async () => {
     // Store the original.
     const original = reservations.validate;
